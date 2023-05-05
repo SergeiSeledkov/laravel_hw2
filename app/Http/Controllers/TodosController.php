@@ -12,18 +12,14 @@ class TodosController extends Controller
      */
     public function index(Request $request)
     {
-        $uri = $request->path();
-        if ($uri === '/') {
-            return view('todo.index', ['appName' => 'Todo app']);
-        }
-        if ($uri === 'todo') {
-            $list = Todo::all();
-            if (count($list) === 0) {
-                return redirect()->route('todo.index');
-            }
+        $todos = Todo::paginate();
 
-            return view('todo.list', ['list' => $list]);
-        }
+        return view(
+            'index',
+            [
+                'todo' => $todos,
+            ]
+        );
     }
 
     /**
@@ -31,30 +27,22 @@ class TodosController extends Controller
      */
     public function create()
     {
-        //
+
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store()
     {
-        $uri = $request->path();
-        if ($uri === 'todo/create' && count(Todo::all()) === 0) {
-            Todo::create([
-                'title' => 'task 1',
-                'description' => 'task 1',
-            ]);
-            Todo::create([
-                'title' => 'task 2',
-                'description' => 'task 2',
-            ]);
-            Todo::create([
-                'title' => 'task 3',
-                'description' => 'task 3',
-            ]);
-        }
-        return redirect()->route('todo.list');
+        Todo::create([
+            'title' => 'Новая задача',
+            'description' => 'Описание задачи ...',
+            'created_at' => date("Y-m-d H:i:s"),
+            'updated_at' => date("Y-m-d H:i:s"),
+        ]);
+
+        return redirect()->back();
     }
 
     /**
@@ -62,13 +50,13 @@ class TodosController extends Controller
      */
     public function show($id)
     {
-        if ($id) {
-            $item = Todo::find($id);
-            if ($item) {
-                return view('todo.item', ['item' => $item]);
-            }
-        }
-        return redirect()->route('todo.list');
+        $todo = Todo::find($id);
+        return view(
+            'item',
+            [
+                'item' => $todo
+            ]
+        );
     }
 
     /**

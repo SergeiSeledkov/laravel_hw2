@@ -8,8 +8,18 @@
     <title>Todos</title>
 </head>
 <body>
-<h1>{{$appName}}</h1>
-<a href="{{ url('/todo') }}">Смотреть список задач</a>
+<h1>ToDo</h1>
+
+<ul style="list-style-type: none">
+    @foreach($todo as $item)
+    <li>ID №: {{ $item->id }}</li>
+    <li>Название: {{ $item->title }}</li>
+    <li>Описание: {{ $item->description }}</li>
+    <li>Создана: {{ $item->created_at }}</li>
+    <li>Изменена: {{ $item->updated_at }}</li>
+    @endforeach
+</ul>
+
 <a href="{{ url('/todo/create') }}">Создать список задач</a>
 </body>
 </html>
